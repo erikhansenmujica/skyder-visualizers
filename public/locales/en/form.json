@@ -1,0 +1,19 @@
+{
+  "songdetails": "Song Details",
+  "youremail": "Your Email",
+  "payment": "Payment",
+  "allfilesrequired": "All fields are required",
+  "songname": "Song Name",
+  "selectedfile": "Selected File:",
+  "chooseotherone": "Choose another one",
+  "mp3orwav": "MP3 or WAV song file",
+  "artists": "Artists",
+  "artistnames": "Artist or Artists Names (separated by commas)",
+  "description": "Description",
+  "whatabout": "What is the song about",
+  "nextstep": "NEXT STEP",
+  "videoreceivemessage": "You will recieve your video via email within 48 hours after payment",
+  "email": "email",
+  "previousstep": "PREVIOUS STEP",
+  "uncompletedfields": "You have uncompleted fields!"
+}

@@ -1,3 +1,6 @@
 # Allow all crawlers
 User-agent: *
 Allow: /
+Disallow: /es/return
+Disallow: /en/return
+Disallow: /pt/return

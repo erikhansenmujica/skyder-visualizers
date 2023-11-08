@@ -1,0 +1,19 @@
+{
+  "songdetails": "Detalles de la Canción",
+  "youremail": "Tu Correo Electrónico",
+  "payment": "Pago",
+  "allfilesrequired": "Todos los campos son obligatorios",
+  "songname": "Nombre de la Canción",
+  "selectedfile": "Archivo Seleccionado:",
+  "chooseotherone": "Elegir otro",
+  "mp3orwav": "Archivo de canción MP3 o WAV",
+  "artists": "Artistas",
+  "artistnames": "Nombre de Artista o Artistas (separados por comas)",
+  "description": "Descripción",
+  "whatabout": "¿De qué trata la canción?",
+  "nextstep": "SIGUIENTE PASO",
+  "videoreceivemessage": "Recibirás tu vídeo por correo electrónico en menos de 48 horas después del pago",
+  "email": "Correo Electrónico",
+  "previousstep": "PASO ANTERIOR",
+  "uncompletedfields": "¡Tienes campos sin completar!"
+}

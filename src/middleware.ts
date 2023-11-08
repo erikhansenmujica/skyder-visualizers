@@ -1,8 +1,12 @@
 import { NextResponse } from "next/server";
 import acceptLanguage from "accept-language";
 import { fallbackLng, languages, cookieName } from "./app/i18n/settings";
+import { authConfig } from "./auth.config";
+import NextAuth from "next-auth";
 
 acceptLanguage.languages(languages);
+
+export default NextAuth(authConfig).auth;
 
 export const config = {
   // matcher: '/:lng*'
@@ -14,7 +18,10 @@ export const config = {
 export function middleware(req: any) {
   if (
     req.nextUrl.pathname === "/sitemap.xml" ||
-    req.nextUrl.pathname === "/qr"
+    req.nextUrl.pathname === "/login" ||
+    req.nextUrl.pathname === "/api" ||
+    req.nextUrl.pathname === "/cardbg.jpeg" ||
+    req.nextUrl.pathname === "/robots.txt"
   ) {
     return NextResponse.next();
   }
@@ -31,8 +38,13 @@ export function middleware(req: any) {
     ) &&
     !req.nextUrl.pathname.startsWith("/_next")
   ) {
+    const { searchParams } = req.nextUrl;
+    let params = "";
+    searchParams.forEach((value: string, key: string) => {
+      params = `${params ? `${params}&` : "?"}${key}=${value}`;
+    });
     return NextResponse.redirect(
-      new URL(`/${lng}${req.nextUrl.pathname}`, req.url)
+      new URL(`/${lng}${req.nextUrl.pathname}${params}`, req.url)
     );
   }
 

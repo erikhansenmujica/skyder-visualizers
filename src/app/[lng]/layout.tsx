@@ -1,7 +1,6 @@
 import "../../../public/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import { dir } from "i18next";
 import { languages } from "../i18n/settings";
 import { serverUseTranslation } from "../i18n";
@@ -31,12 +30,12 @@ export async function generateMetadata(props: HomeProps): Promise<Metadata> {
       shortcut: "/faviconlogo.png",
       apple: "/faviconlogo.png",
     },
-    metadataBase: new URL("https://www.skyderdigital.com"),
+    metadataBase: new URL("https://app.skyderdigital.com"),
     verification: {
-      google: "Oo_6jAoHQzYV4P5UpM-TDI99dFhfcEro7Tfokc6VOHU",
+      // google: "Oo_6jAoHQzYV4P5UpM-TDI99dFhfcEro7Tfokc6VOHU",
     },
     alternates: {
-      canonical: `https://www.skyderdigital.com/${props.params.lng}`,
+      canonical: `https://app.skyderdigital.com`,
     },
   };
 }
@@ -52,19 +51,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang={lng} dir={dir(lng)}>
-      <Script
-        id="gtag"
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=AW-11378863259"
-      ></Script>
-      <Script id="gtag-action">
-        {`
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'AW-11378863259');
-`}
-      </Script>
       <body className={inter.className}>{children}</body>
     </html>
   );

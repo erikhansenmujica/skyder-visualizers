@@ -49,3 +49,27 @@ button {
 header {
   z-index: 10;
 }
+@keyframes tickAnimation {
+  0% {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.border-success-tick {
+  border-image: linear-gradient(
+      45deg,
+      transparent 30%,
+      #00b859 30%,
+      #00b859 70%,
+      transparent 70%
+    )
+    1;
+  border-image-slice: 1;
+  animation: tickAnimation 0.5s ease forwards;
+}
