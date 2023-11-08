@@ -1,3 +1,4 @@
+"use client";
 import { createOrder } from "@/actions";
 import { Customer } from "@/lib/definitions";
 import {
@@ -6,17 +7,19 @@ import {
   PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
 
-const client = new S3Client({
-  region: "eu-west-3",
-  credentials: {
-    secretAccessKey: process.env.NEXT_PUBLIC_AMAZON_SECRET_ACCESS_KEY
-      ? process.env.NEXT_PUBLIC_AMAZON_SECRET_ACCESS_KEY
-      : "",
-    accessKeyId: process.env.NEXT_PUBLIC_AMAZON_ACCESS_KEY_ID
-      ? process.env.NEXT_PUBLIC_AMAZON_ACCESS_KEY_ID
-      : "",
-  },
-});
+let client: S3Client | null = null;
+if (
+  process.env.NEXT_PUBLIC_AMAZON_ACCESS_SECRET &&
+  process.env.NEXT_PUBLIC_AMAZON_ACCESS_KEY_ID
+) {
+  client = new S3Client({
+    region: "eu-west-3",
+    credentials: {
+      secretAccessKey: process.env.NEXT_PUBLIC_AMAZON_ACCESS_SECRET,
+      accessKeyId: process.env.NEXT_PUBLIC_AMAZON_ACCESS_KEY_ID,
+    },
+  });
+}
 
 interface CreateOrderProps {
   localFile: File;
@@ -47,21 +50,19 @@ export async function sendFile({
   // Specify the folder within the S3 bucket
 
   try {
-    client.send(command, async (err: any, data: any) => {
-      console.log("AWS: ", songName);
-      if (err) {
-        console.error(err);
-      } else {
-        console.log("uploaded");
-        await createOrder({
-          data,
-          songName,
-          customer: { email: customer.email, artist: customer.artist },
-          price: price,
-          song_description: song_description,
-        });
-      }
-    });
+    if (client) {
+      const data = await client.send(command);
+      console.log("uploaded");
+      await createOrder({
+        location:
+          "https://skydersongs.s3.eu-west-3.amazonaws.com/" +
+          encodeURI(customer.email + "_" + songName),
+        songName,
+        customer: { email: customer.email, artist: customer.artist },
+        price: price,
+        song_description: song_description,
+      });
+    }
   } catch (error) {
     if ((error as Error).message.includes("CredentialsSignin")) {
       return "CredentialSignin";

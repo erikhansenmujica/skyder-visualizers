@@ -111,13 +111,13 @@ export async function SendOrder({
 }
 
 export async function createOrder({
-  data,
+  location,
   songName,
   customer,
   price,
   song_description,
 }: {
-  data: any;
+  location: string;
   songName: string;
   customer: Customer;
   price: number;
@@ -134,7 +134,7 @@ export async function createOrder({
         customer_id: custom.id ? custom.id : "",
         email: customer.email,
         song_description: song_description,
-        song_url: data.Location,
+        song_url: location,
         song_name: songName,
         price: price,
         date: new Date().toISOString(),
