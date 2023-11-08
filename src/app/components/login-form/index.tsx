@@ -2,8 +2,9 @@
 import { useFormState, useFormStatus } from "react-dom";
 import { authenticate } from "@/actions";
 import localFont from "next/font/local";
-const druk = localFont({ src: "../../../../fonts/druk.wide.ttf" });
-const calibri = localFont({ src: "../../../../fonts/calibri-regular.ttf" });
+
+const druk = localFont({ src: "../../../fonts/druk.wide.ttf" });
+const calibri = localFont({ src: "../../../fonts/calibri-regular.ttf" });
 
 export default function LoginForm() {
   const [code, action] = useFormState(authenticate, undefined);
