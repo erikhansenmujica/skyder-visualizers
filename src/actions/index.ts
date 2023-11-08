@@ -1,23 +1,11 @@
 "use server";
-import { Customer } from "@/lib/definitions";
 import { signIn } from "../auth";
 import { CreateOrReturnExistingCustomer } from "./customers";
 import { CreateNewOrder, UpdateOrderInvoiceID, getOrder } from "./orders";
 import { CreateNewInvoice } from "./invoices";
 import { createClient } from "@vercel/postgres";
-const AWS = require("aws-sdk");
-AWS.config.update({
-  accessKeyId: process.env.AMAZON_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AMAZON_ACCESS_SECRET,
-  region: "eu-west-3",
-});
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "200mb",
-    },
-  },
-};
+import { Customer } from "@/lib/definitions";
+
 export async function authenticate(
   _prevState: string | undefined,
   formData: FormData
@@ -68,79 +56,9 @@ export const createInvoiceAndAddToOrder = async (
     }
   }
 };
-
-interface CreateOrderProps {
-  localFile: string;
-  songName: string;
-  contentType: string;
-  customer: Customer;
-  price: number;
-  song_description: string;
-}
-
-export async function createOrder({
-  localFile,
-  songName,
-  contentType,
-  customer,
-  price,
-  song_description,
-}: CreateOrderProps) {
-  try {
-    const s3 = new AWS.S3();
-    // Define the S3 bucket name and Access Point ARN
-    const bucketName = "skydersongs";
-    // Specify the folder within the S3 bucket
-    const base64Data = localFile.split(",")[1];
-    // Specify the local file you want to upload
-    const binaryData = Buffer.from(base64Data, "base64");
-    // Create the S3 object key by combining the folder and file name
-
-    s3.upload(
-      {
-        Bucket: bucketName,
-        Key: customer.email + "_" + songName,
-        Body: binaryData,
-        ContentType: contentType,
-      },
-      async (err: any, data: any) => {
-        const client = createClient();
-        await client.connect();
-        if (err) {
-          console.error("Error uploading file:", err);
-        } else {
-          const custom = await CreateOrReturnExistingCustomer(customer, client);
-          if (custom) {
-            await CreateNewOrder(
-              {
-                id: "",
-                artist: customer.artist,
-                customer_id: custom.id ? custom.id : "",
-                email: customer.email,
-                song_description: song_description,
-                song_url: data.Location,
-                song_name: songName,
-                price: price,
-                date: new Date().toISOString(),
-                invoice_id: null,
-                status: "pending",
-              },
-              client
-            );
-          }
-        }
-      }
-    );
-  } catch (error) {
-    if ((error as Error).message.includes("CredentialsSignin")) {
-      return "CredentialSignin";
-    }
-    throw error;
-  }
-}
 interface SendOrderProps {
   songName: string;
-  songFile: string;
+
   email: string;
   artistName: string;
   selectedOption: number;
@@ -149,7 +67,7 @@ interface SendOrderProps {
 }
 export async function SendOrder({
   songName,
-  songFile,
+
   email,
   artistName,
   selectedOption,
@@ -158,7 +76,7 @@ export async function SendOrder({
 }: SendOrderProps) {
   const client = createClient();
   await client.connect();
-  if (songName && songFile && email && artistName && selectedOption) {
+  if (songName && email && artistName && selectedOption) {
     const order = await getOrder(email, client);
     const songtype =
       order && order.song_url.split(".")[order.song_url.split(".").length - 1];
@@ -174,18 +92,56 @@ export async function SendOrder({
       ((songtype === "mp3" && contentType === "audio/mpeg") ||
         (songtype === "wav" && contentType === "audio/wav"))
     ) {
-      return "already exists";
-    } else
-      await createOrder({
-        localFile: songFile,
-        songName,
-        contentType,
-        customer: {
-          email,
-          artist: artistName,
-        },
-        price: selectedOption,
-        song_description: songDescription,
-      });
+      return 1;
+    } else {
+      return 0;
+    }
+    // await createOrder({
+    //   localFile: songFile,
+    //   songName,
+    //   contentType,
+    //   customer: {
+    //     email,
+    //     artist: artistName,
+    //   },
+    //   price: selectedOption,
+    //   song_description: songDescription,
+    // });
+  }
+}
+
+export async function createOrder({
+  data,
+  songName,
+  customer,
+  price,
+  song_description,
+}: {
+  data: any;
+  songName: string;
+  customer: Customer;
+  price: number;
+  song_description: string;
+}) {
+  const client = createClient();
+  await client.connect();
+  const custom = await CreateOrReturnExistingCustomer(customer, client);
+  if (custom) {
+    await CreateNewOrder(
+      {
+        id: "",
+        artist: customer.artist,
+        customer_id: custom.id ? custom.id : "",
+        email: customer.email,
+        song_description: song_description,
+        song_url: data.Location,
+        song_name: songName,
+        price: price,
+        date: new Date().toISOString(),
+        invoice_id: null,
+        status: "pending",
+      },
+      client
+    );
   }
 }

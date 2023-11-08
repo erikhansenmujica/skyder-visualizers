@@ -6,6 +6,7 @@ import {
 } from "@stripe/react-stripe-js";
 import { createCheckoutSession } from "@/actions/stripe";
 import { SendOrder } from "@/actions";
+import { sendFile } from "./uploads3";
 let stripePromise: Promise<Stripe | null>;
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
   stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
@@ -50,25 +51,36 @@ export const StripeForm = ({
       artistName &&
       email
     ) {
-      const reader = new FileReader();
-      reader.readAsDataURL(songFile);
-      reader.onload = () => {
-        if (typeof reader.result === "string") {
-          const file: string = reader.result as string;
-          SendOrder({
-            songName:
-              songName + (songFile.type === "audio/mpeg" ? ".mp3" : ".wav"),
-            songFile: file,
-            email: email,
-            artistName,
-            selectedOption,
-            songDescription: optionalStyle
+      (async () => {
+        const name =
+          songName + (songFile.type === "audio/mpeg" ? ".mp3" : ".wav");
+
+        const order = await SendOrder({
+          songName: name,
+          email: email,
+          artistName,
+          selectedOption,
+          songDescription: optionalStyle
+            ? songDescription + "- OPTIONAL STYLE: " + optionalStyle
+            : songDescription,
+          contentType: songFile.type,
+        });
+        if (!order) {
+          sendFile({
+            localFile: songFile,
+            songName: name,
+            contentType: songFile.type,
+            customer: {
+              email,
+              artist: artistName,
+            },
+            price: selectedOption,
+            song_description: optionalStyle
               ? songDescription + "- OPTIONAL STYLE: " + optionalStyle
               : songDescription,
-            contentType: songFile.type,
           });
         }
-      };
+      })();
     } else if (
       !selectedOption ||
       !songDescription ||
