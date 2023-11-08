@@ -11,7 +11,13 @@ AWS.config.update({
   secretAccessKey: process.env.AMAZON_ACCESS_SECRET,
   region: "eu-west-3",
 });
-
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "200mb",
+    },
+  },
+};
 export async function authenticate(
   _prevState: string | undefined,
   formData: FormData

@@ -34,12 +34,12 @@ export const StripeForm = ({
   const [clientSecret, setClientSecret] = useState("");
   useEffect(() => {
     setClientSecret("");
-
-    createCheckoutSession(selectedOption, email, artistName).then((data) => {
-      if (data.client_secret) {
-        setClientSecret(data.client_secret);
-      }
-    });
+    if (selectedOption && email && artistName)
+      createCheckoutSession(selectedOption, email, artistName).then((data) => {
+        if (data.client_secret) {
+          setClientSecret(data.client_secret);
+        }
+      });
   }, [selectedOption]);
   useEffect(() => {
     if (
