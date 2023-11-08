@@ -91,7 +91,7 @@ export const StripeForm = ({
     ) {
       console.log("Error: Missing data");
     }
-  }, []);
+  }, [selectedOption]);
   return (
     <div id="checkout" className="w-full md:w-[70%] mt-8">
       {clientSecret && stripePromise && (

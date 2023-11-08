@@ -18,8 +18,8 @@ export async function createCheckoutSession(
           // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
           price:
             selectedOption === 25
-              ? "price_1OA31aKOBbArU92krs1FKUoA"
-              : "price_1OA311KOBbArU92koUN0jyCc",
+              ? process.env.STRIPE_COVER_ID
+              : process.env.STRIPE_VISUALIZER_ID,
           quantity: 1,
         },
       ],

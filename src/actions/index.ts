@@ -67,7 +67,6 @@ interface SendOrderProps {
 }
 export async function SendOrder({
   songName,
-
   email,
   artistName,
   selectedOption,
@@ -80,7 +79,17 @@ export async function SendOrder({
     const order = await getOrder(email, client);
     const songtype =
       order && order.song_url.split(".")[order.song_url.split(".").length - 1];
-
+    console.log(
+      order &&
+        order.status === "pending" &&
+        order.song_name === songName &&
+        order.artist === artistName &&
+        order.song_description === songDescription &&
+        order.email === email &&
+        order.price === selectedOption &&
+        ((songtype === "mp3" && contentType === "audio/mpeg") ||
+          (songtype === "wav" && contentType === "audio/wav"))
+    );
     if (
       order &&
       order.status === "pending" &&
