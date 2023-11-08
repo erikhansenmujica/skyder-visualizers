@@ -13,7 +13,7 @@ import { YoutubePlaylist } from "../components/YoutubePlaylist";
 import Image from "next/image";
 import { GetJobs } from "@/actions/jobs";
 import { Job } from "@/lib/definitions";
-
+import { useDetectAdBlock } from "adblock-detect-react";
 const calibri = localFont({ src: "../../fonts/calibri-regular.ttf" });
 const druk = localFont({ src: "../../fonts/druk.wide.ttf" });
 
@@ -29,7 +29,13 @@ const Home = ({ params: { lng } }: HomeProps) => {
   const { t } = useTranslation(lng, "titlesandsubtitles");
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const adBlockDetected = useDetectAdBlock();
   useEffect(() => {
+    if (adBlockDetected) {
+      alert(
+        "We have detected that you are using an adblocker. Please disable it to use our website."
+      );
+    }
     (async () => {
       setLoading(true);
       const jobs = await GetJobs();
@@ -40,7 +46,26 @@ const Home = ({ params: { lng } }: HomeProps) => {
   const imageStyles =
     "object-contain w-full h-full rounded-xl shadow cursor-pointer hover:scale-[110%] hover:border-2 hover:border-white transition-all duration-500 ease-in-out";
   const imageBoxes = "h-[25%] md:h-[32%] w-[25%] md:w-32% p-3";
-  return (
+  return adBlockDetected ? (
+    <div
+      className={`${calibri.className} flex flex-col items-center justify-around`}
+    >
+      <LogoParallax isVisible={false} main />
+      <AppHeader lng={lng} main />
+      <div className="absolute top-0 z-[-1]">
+        {banner && (
+          <video autoPlay playsInline className="w-screen" muted loop>
+            <source src={banner} type="video/mp4" />
+          </video>
+        )}
+      </div>
+      <MessagesInBetween
+        inverted
+        text={t("disableadblock")}
+        size="3xl"
+      ></MessagesInBetween>
+    </div>
+  ) : (
     <div
       className={`${calibri.className} flex flex-col items-center justify-around`}
     >
