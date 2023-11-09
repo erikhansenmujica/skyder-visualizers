@@ -32,9 +32,19 @@ export const AppHeader = ({
     setMobile(screenWidth <= 640); // Adjust the breakpoint as needed
   }, []);
   return (
-    <header className="flex w-screen text-1xl text-white justify-between mt-9">
+    <header className="flex w-screen z-20 text-1xl text-white justify-between mt-9">
       {main ? (
-        <div className="flex-1  self-start" />
+        mobile ? (
+          <div />
+        ) : (
+          <Link target="_blank" href={"https://skyderdigital.com"}>
+            <button
+              className={`sm:w-40 h-14 text-1xl md:ml-8 border-white border-2 bg-black rounded-xl transition-colors rounded duration-350 ease-in-out  hover:bg-white hover:text-black`}
+            >
+              {t("mainpage")}
+            </button>
+          </Link>
+        )
       ) : (
         <Link href={"/"} className="flex-1  self-start">
           <button className="sm:w-40 h-14 text-2xl flex justify-center items-center transition-colors rounded duration-350 ease-in-out  hover:bg-white hover:text-black">
