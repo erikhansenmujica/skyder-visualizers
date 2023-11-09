@@ -17,6 +17,7 @@ export const LogoParallax = ({ isVisible, main }: LogoParallaxProps) => {
         width={"225"}
         height={"100"}
         alt=""
+        className="z-10"
       ></Image>
       <div
         className={`bg-black ${

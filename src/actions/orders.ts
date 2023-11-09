@@ -1,17 +1,17 @@
 "use server";
-import { VercelClient, sql } from "@vercel/postgres";
+import { VercelClient } from "@vercel/postgres";
 import { Order } from "@/lib/definitions";
 
 export const CreateNewOrder = async (order: Order, client: VercelClient) => {
   try {
     const newOrder =
-      await client.sql<Order>`INSERT INTO orders (artist, customer_id, email, song_description, song_url, song_name, price, date, invoice_id, status, product_id) VALUES (${
+      await client.sql<Order>`INSERT INTO orders (artist, customer_id, email, song_description, song_url, song_name, price, invoice_id, status, product_id) VALUES (${
         order.artist
       }, ${order.customer_id}, ${order.email}, ${order.song_description}, ${
         order.song_url
-      }, ${order.song_name}, ${order.price}, ${order.date}, ${
-        order.invoice_id
-      }, ${order.status}, ${
+      }, ${order.song_name}, ${order.price}, ${order.invoice_id}, ${
+        order.status
+      }, ${
         order.price === 25 ? "Skyder_Cover" : "Skyder_Visualizer"
       }) RETURNING *`;
     return newOrder.rows[0];
@@ -22,7 +22,7 @@ export const CreateNewOrder = async (order: Order, client: VercelClient) => {
 export const getOrder = async (email: string, client: VercelClient) => {
   try {
     const newOrder =
-      await client.sql<Order>`SELECT * FROM orders WHERE email = ${email} ORDER BY  id DESC LIMIT 1`;
+      await client.sql<Order>`SELECT * FROM orders WHERE email = ${email} ORDER BY date DESC LIMIT 1`;
     return newOrder.rows[0];
   } catch (error) {
     console.error(error);

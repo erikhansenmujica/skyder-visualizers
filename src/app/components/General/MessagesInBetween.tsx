@@ -6,6 +6,7 @@ export const MessagesInBetween = ({
   gradient,
   gradienttext,
   highlightwords,
+  video,
 }: {
   text: string;
   size?: string;
@@ -14,6 +15,7 @@ export const MessagesInBetween = ({
   gradient?: boolean;
   gradienttext?: boolean;
   highlightwords?: string[];
+  video?: string;
 }) => {
   const words = highlightwords ? text.split(" ") : [];
   const sizeClass = size ? "text-" + size : "text-1xl";
@@ -21,18 +23,31 @@ export const MessagesInBetween = ({
     <header
       ref={firstScrollRef}
       className={
-        gradient
-          ? "bg-gradient-to-r from-blue-500 to-teal-400 w-full py-20 mb-400 "
-          : "bg-transparent w-full py-20 mb-400 bg-gray-800 border-gray-700 text-white"
+        video
+          ? "relative w-screen"
+          : "" +
+            (gradient
+              ? "bg-gradient-to-r from-blue-500 to-teal-400 w-full py-20 mb-400 "
+              : "bg-transparent w-full py-20 mb-400 bg-gray-800 border-gray-700 text-white")
       }
     >
+      {video && (
+        <div className="absolute top-0 w-full z-[-1]">
+          <video autoPlay playsInline className=" w-full" muted loop>
+            <source src={video} type="video/mp4" />
+          </video>
+        </div>
+      )}
+      {video && (
+        <div className="absolute bg-gradient-to-t from-transparent to-black top-0 w-full h-full md:h-[500px] z-0"></div>
+      )}
       <div className="mx-auto text-center flex flex-col justify-between">
         <h1
           className={
             gradienttext && !highlightwords
               ? sizeClass +
-                " text-white bg-clip-text bg-gradient-to-r text-transparent from-blue-500 to-teal-400  m-5 p-0"
-              : sizeClass + " font-bold text-white m-5 p-0"
+                "  text-white bg-clip-text bg-gradient-to-r text-transparent from-blue-500 to-teal-400  m-5 p-0"
+              : sizeClass + " z-10 font-bold text-white m-5 p-0"
           }
         >
           {highlightwords

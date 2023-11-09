@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { StripeForm } from "../Stripe";
 import { createOrder } from "@/actions";
 import Lottie from "lottie-react";
@@ -7,6 +7,8 @@ import animationTick from "@/lottie/tick.json";
 import animationCross from "@/lottie/cross.json";
 import { useTranslation } from "@/app/i18n/client";
 import localFont from "next/font/local";
+import { StripeModal } from "../Modals/StripeModal";
+import { PickStyle } from "../PickStyle";
 
 const druk = localFont({ src: "../../../fonts/druk.wide.ttf" });
 const calibri = localFont({ src: "../../../fonts/calibri-regular.ttf" });
@@ -28,10 +30,11 @@ const optionalStyles: { [key: string]: string } = {
 
 interface IInputAndPayment {
   lng: string;
-  selectedStyle: number | undefined;
+  style: number | undefined;
 }
 
-export const InputAndPayment = ({ lng, selectedStyle }: IInputAndPayment) => {
+export const InputAndPayment = ({ lng, style }: IInputAndPayment) => {
+  const [selectedStyle, setSelectedStyle] = useState<number>(style ? style : 0);
   const [activeTab, setActiveTab] = useState(1);
   const [songFile, setSongFile] = useState<File>();
   const [songName, setSongName] = useState("");
@@ -40,9 +43,14 @@ export const InputAndPayment = ({ lng, selectedStyle }: IInputAndPayment) => {
   const [email, setEmail] = useState("");
   const [selectedOption, setSelectedOption] = useState<number>();
   const { t } = useTranslation(lng, "form");
+  const [stripeModal, setStripeModal] = useState(false);
   const handleTabChange = (tab: number) => {
     setActiveTab(tab);
   };
+  useEffect(() => {
+    if (selectedOption && songFile && songName && songDescription && artistName)
+      setStripeModal(true);
+  }, [activeTab, selectedOption]);
   const validateEmail = (email: string) => {
     return !String(email)
       .toLowerCase()
@@ -72,7 +80,7 @@ export const InputAndPayment = ({ lng, selectedStyle }: IInputAndPayment) => {
       else return false;
     }
   };
-  const boxes = "flex flex-col w-[89%] m-4";
+  const boxes = "flex flex-col justify-center w-[100%] m-4";
   const boxandtick = "flex justify-between items-center w-[100%]";
   const btns =
     "flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-500 hover:bg-blue-600";
@@ -81,14 +89,16 @@ export const InputAndPayment = ({ lng, selectedStyle }: IInputAndPayment) => {
   const inputs =
     "w-[90%] p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-4  dark:bg-gray-800 dark:border-gray-700 dark:text-white";
   return (
-    <div className="text-xl z-10 dark:bg-opacity-80 flex-1 w-[100%]  md:w-[70%] mt-[5%] mx-auto p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8  dark:bg-gray-800 dark:border-gray-700 dark:text-white flex flex-col justify-between">
-      <div className="shadow-md p-4 rounded-md ">
-        <div className="flex justify-evenly space-x-8">
+    <div className="text-xl z-10 dark:bg-opacity-80  w-[100%]  md:w-[70%] mt-[5%] mx-auto p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8  dark:bg-gray-800 dark:border-gray-700 dark:text-white flex flex-col justify-between">
+      <div className="shadow-md p-4 rounded-md">
+        <div className="flex justify-evenly md:space-x-8 mb-[15%] md:mb-[5%]">
           <div
-            className={`cursor-pointer flex justify-center ${
+            className={`cursor-pointer  text-center flex justify-center ${
               activeTab === 1 ? "border-b-2 border-blue-500" : ""
             }`}
-            onClick={() => handleTabChange(1)}
+            onClick={() =>
+              !checkIfFieldsAreFilled(1) ? handleTabChange(1) : ""
+            }
           >
             {t("songdetails")}{" "}
             {!checkIfFieldsAreFilled(1) ? (
@@ -104,10 +114,14 @@ export const InputAndPayment = ({ lng, selectedStyle }: IInputAndPayment) => {
             )}
           </div>
           <div
-            className={`cursor-pointer flex justify-center ${
+            className={`cursor-pointer flex text-center justify-center ${
               activeTab === 2 ? "border-b-2 border-blue-500" : ""
             }`}
-            onClick={() => handleTabChange(2)}
+            onClick={() =>
+              !checkIfFieldsAreFilled(1) || !checkIfFieldsAreFilled(2)
+                ? handleTabChange(2)
+                : ""
+            }
           >
             {t("youremail")}{" "}
             {!checkIfFieldsAreFilled(2) ? (
@@ -123,10 +137,14 @@ export const InputAndPayment = ({ lng, selectedStyle }: IInputAndPayment) => {
             )}
           </div>
           <div
-            className={`cursor-pointer ${
+            className={`cursor-pointer text-center ${
               activeTab === 3 ? "border-b-2 border-blue-500" : ""
             }`}
-            onClick={() => handleTabChange(3)}
+            onClick={() =>
+              !checkIfFieldsAreFilled(1) && !checkIfFieldsAreFilled(2)
+                ? handleTabChange(3)
+                : ""
+            }
           >
             {t("payment")}
           </div>
@@ -245,34 +263,41 @@ export const InputAndPayment = ({ lng, selectedStyle }: IInputAndPayment) => {
           )}
 
           {activeTab === 2 && (
-            <div className={boxes}>
-              <label htmlFor="25">{t("email")} *</label>
-              <div className={boxandtick}>
-                <input
-                  required
-                  className={inputs}
-                  type="email"
-                  placeholder={t("youremail")}
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                {email ? (
-                  validateEmail(email) ? (
-                    <Lottie
-                      className="h-10 w-10 "
-                      animationData={animationCross}
-                      loop={false}
-                    />
+            <div className="flex flex-col items-center content-center">
+              <div className={boxes}>
+                <label htmlFor="25">{t("email")} *</label>
+                <div className={boxandtick}>
+                  <input
+                    required
+                    className={inputs}
+                    type="email"
+                    placeholder={t("youremail")}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  {email ? (
+                    validateEmail(email) ? (
+                      <Lottie
+                        className="h-10 w-10"
+                        animationData={animationCross}
+                        loop={false}
+                      />
+                    ) : (
+                      <Lottie
+                        className="h-10 w-10"
+                        animationData={animationTick}
+                        loop={false}
+                      />
+                    )
                   ) : (
-                    <Lottie
-                      className="h-10 w-10 "
-                      animationData={animationTick}
-                      loop={false}
-                    />
-                  )
-                ) : (
-                  <div />
-                )}
+                    <div />
+                  )}
+                </div>
+                <PickStyle
+                  lng={lng}
+                  selectedStyle={selectedStyle}
+                  setSelectedStyle={setSelectedStyle}
+                />
               </div>
             </div>
           )}
@@ -292,6 +317,9 @@ export const InputAndPayment = ({ lng, selectedStyle }: IInputAndPayment) => {
                 <div
                   onClick={() => {
                     setSelectedOption(25);
+                    if (selectedOption === 25) {
+                      setStripeModal(true);
+                    }
                   }}
                   className="absolute bg-gradient-to-r hover:to-[rgba(255,255,255,0.5)] from-transparent to-[rgba(0,0,0,0.5)] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] flex justify-center items-center top-0 left-0  w-full h-full cursor-pointer"
                 >
@@ -326,6 +354,9 @@ export const InputAndPayment = ({ lng, selectedStyle }: IInputAndPayment) => {
                 <div
                   onClick={() => {
                     setSelectedOption(69);
+                    if (selectedOption === 69) {
+                      setStripeModal(true);
+                    }
                   }}
                   className="absolute bg-gradient-to-r  hover:to-[rgba(255,255,255,0.5)] from-transparent to-[rgba(0,0,0,0.5)] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] flex justify-center items-center top-0 left-0 w-full h-full cursor-pointer"
                 >
@@ -353,52 +384,60 @@ export const InputAndPayment = ({ lng, selectedStyle }: IInputAndPayment) => {
                 songDescription &&
                 artistName &&
                 email && (
-                  <StripeForm
-                    songFile={songFile}
-                    songName={songName}
-                    songDescription={songDescription}
-                    artistName={artistName}
-                    email={email}
-                    selectedOption={selectedOption}
-                    optionalStyle={
-                      optionalStyles[selectedStyle ? selectedStyle : ""]
-                    }
-                  ></StripeForm>
+                  <StripeModal
+                    showModal={stripeModal}
+                    setShowModal={setStripeModal}
+                  >
+                    <StripeForm
+                      songFile={songFile}
+                      songName={songName}
+                      songDescription={songDescription}
+                      artistName={artistName}
+                      email={email}
+                      selectedOption={selectedOption}
+                      optionalStyle={
+                        optionalStyles[selectedStyle ? selectedStyle : ""]
+                      }
+                      lng={lng}
+                    ></StripeForm>
+                  </StripeModal>
                 )}
             </div>
           )}
         </div>
       </div>
-      <div className="flex justify-between mt-5 w-full">
-        <div className="group relative m-12 flex justify-center">
-          <button
-            className={activeTab === 1 ? "invisible " + btns : btns}
-            onClick={() => setActiveTab(activeTab - 1)}
-          >
-            {t("previousstep")}
-          </button>
-        </div>
-        <div className="group relative m-12 flex justify-center">
-          <button
-            disabled={checkIfFieldsAreFilled(0, "end")}
-            className={
-              activeTab === 3
-                ? "invisible self-end" + btns
-                : checkIfFieldsAreFilled(0, "end")
-                ? btnsnohover
-                : btns
-            }
-            onClick={() => setActiveTab(activeTab + 1)}
-          >
-            {t("nextstep")}
-          </button>
-          {checkIfFieldsAreFilled(0, "end") ? (
-            <span className="w-[180%] absolute top-[43px] scale-0 transition-all rounded bg-gray-800 p-2 text-xs text-white group-hover:scale-100">
-              ✨ {t("uncompletedfields")}
-            </span>
-          ) : (
-            <div />
-          )}
+      <div className="flex flex-col items-center content-center">
+        <div className="flex justify-between mt-5 w-full">
+          <div className="group relative  flex justify-center">
+            <button
+              className={activeTab === 1 ? "invisible " + btns : btns}
+              onClick={() => setActiveTab(activeTab - 1)}
+            >
+              {t("previousstep")}
+            </button>
+          </div>
+          <div className="group relative flex justify-center">
+            <button
+              disabled={checkIfFieldsAreFilled(0, "end")}
+              className={
+                activeTab === 3
+                  ? "invisible self-end" + btns
+                  : checkIfFieldsAreFilled(0, "end")
+                  ? btnsnohover
+                  : btns
+              }
+              onClick={() => setActiveTab(activeTab + 1)}
+            >
+              {t("nextstep")}
+            </button>
+            {checkIfFieldsAreFilled(0, "end") ? (
+              <span className="w-[180%] absolute top-[43px] scale-0 transition-all rounded bg-gray-800 p-2 text-xs text-white group-hover:scale-100">
+                ✨ {t("uncompletedfields")}
+              </span>
+            ) : (
+              <div />
+            )}
+          </div>
         </div>
       </div>
     </div>

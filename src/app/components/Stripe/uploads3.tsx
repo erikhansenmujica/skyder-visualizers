@@ -1,11 +1,9 @@
 "use client";
 import { createOrder } from "@/actions";
 import { Customer } from "@/lib/definitions";
-import {
-  S3Client,
-  PutObjectCommand,
-  PutObjectCommandInput,
-} from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommandInput } from "@aws-sdk/client-s3";
+import { Dispatch, SetStateAction } from "react";
+import { Upload } from "@aws-sdk/lib-storage";
 
 let client: S3Client | null = null;
 if (
@@ -28,6 +26,7 @@ interface CreateOrderProps {
   customer: Customer;
   price: number;
   song_description: string;
+  setPercentage: Dispatch<SetStateAction<number>>;
 }
 
 export async function sendFile({
@@ -37,6 +36,7 @@ export async function sendFile({
   customer,
   price,
   song_description,
+  setPercentage,
 }: CreateOrderProps) {
   const bucketName = "skydersongs";
   const params: PutObjectCommandInput = {
@@ -45,14 +45,17 @@ export async function sendFile({
     Body: localFile,
     ContentType: contentType,
   };
-  const command = new PutObjectCommand(params);
-  // Define the S3 bucket name and Access Point ARN
-  // Specify the folder within the S3 bucket
-
   try {
     if (client) {
-      const data = await client.send(command);
-      console.log("uploaded");
+      const upload = new Upload({
+        client,
+        params,
+      });
+      upload.on("httpUploadProgress", (progress) => {
+        if (progress.loaded && progress.total)
+          setPercentage(Math.round((progress.loaded * 100) / progress.total));
+      });
+      await upload.done();
       await createOrder({
         location:
           "https://skydersongs.s3.eu-west-3.amazonaws.com/" +

@@ -1,6 +1,6 @@
 {
   "songdetails": "Song Details",
-  "youremail": "Your Email",
+  "youremail": "Email",
   "payment": "Payment",
   "allfilesrequired": "All fields are required",
   "songname": "Song Name",
@@ -13,7 +13,7 @@
   "whatabout": "What is the song about",
   "nextstep": "NEXT STEP",
   "videoreceivemessage": "You will recieve your video via email within 48 hours after payment",
-  "email": "email",
+  "email": "Email",
   "previousstep": "PREVIOUS STEP",
   "uncompletedfields": "You have uncompleted fields!"
 }

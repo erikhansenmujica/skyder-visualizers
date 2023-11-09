@@ -58,7 +58,7 @@ async function seedInvoices(client) {
     customer_id UUID NOT NULL,
     status VARCHAR(255) NOT NULL,
     price INT NOT NULL,
-    date DATE NOT NULL,
+    date TIMESTAMP DEFAULT NOW(),
     product_id VARCHAR(255) NOT NULL,
     stripe_pi_id VARCHAR(255),
     order_id UUID
@@ -85,7 +85,7 @@ async function seedOrders(client) {
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     customer_id UUID NOT NULL,
     status VARCHAR(255) NOT NULL,
-    date DATE NOT NULL,
+    date TIMESTAMP DEFAULT NOW(),
     product_id VARCHAR(255) NOT NULL,
     stripe_pi_id VARCHAR(8000),
     email VARCHAR(255) NOT NULL,
@@ -121,7 +121,8 @@ async function seedJobs(client) {
         time_spent VARCHAR(255),
         artist VARCHAR(255),
         product_id VARCHAR(255),
-        customer_id UUID
+        customer_id UUID,
+        date TIMESTAMP DEFAULT NOW()
       );
     `;
     console.log(`Created "jobs" table`);
@@ -153,7 +154,8 @@ async function seedCustomers(client) {
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         artist VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
-        image_url VARCHAR(255) 
+        image_url VARCHAR(255),
+        date TIMESTAMP DEFAULT NOW()
       );
     `;
 

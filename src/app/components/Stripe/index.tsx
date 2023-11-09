@@ -7,6 +7,8 @@ import {
 import { createCheckoutSession } from "@/actions/stripe";
 import { SendOrder } from "@/actions";
 import { sendFile } from "./uploads3";
+import { Spinner } from "../Spinner";
+import { useTranslation } from "@/app/i18n/client";
 let stripePromise: Promise<Stripe | null>;
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
   stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
@@ -22,6 +24,7 @@ interface StripeFormProps {
   artistName: string;
   email: string;
   optionalStyle: string;
+  lng: string;
 }
 export const StripeForm = ({
   selectedOption,
@@ -31,8 +34,12 @@ export const StripeForm = ({
   artistName,
   email,
   optionalStyle,
+  lng,
 }: StripeFormProps) => {
   const [clientSecret, setClientSecret] = useState("");
+  const [loadData, setLoadData] = useState("");
+  const [percentage, setPercentage] = useState<number>(0);
+  const { t } = useTranslation(lng, "stripe");
   useEffect(() => {
     setClientSecret("");
     if (selectedOption && email && artistName)
@@ -52,6 +59,7 @@ export const StripeForm = ({
       email
     ) {
       (async () => {
+        setLoadData("loading order");
         const name =
           songName + (songFile.type === "audio/mpeg" ? ".mp3" : ".wav");
 
@@ -66,7 +74,8 @@ export const StripeForm = ({
           contentType: songFile.type,
         });
         if (!order) {
-          sendFile({
+          setLoadData("uploading file");
+          await sendFile({
             localFile: songFile,
             songName: name,
             contentType: songFile.type,
@@ -78,8 +87,10 @@ export const StripeForm = ({
             song_description: optionalStyle
               ? songDescription + "- OPTIONAL STYLE: " + optionalStyle
               : songDescription,
+            setPercentage,
           });
         }
+        setLoadData("done");
       })();
     } else if (
       !selectedOption ||
@@ -94,13 +105,30 @@ export const StripeForm = ({
   }, [selectedOption]);
   return (
     <div id="checkout" className="w-full md:w-[70%] mt-8">
-      {clientSecret && stripePromise && (
+      {clientSecret && stripePromise && loadData === "done" && (
         <EmbeddedCheckoutProvider
           stripe={stripePromise}
           options={{ clientSecret }}
         >
           <EmbeddedCheckout className="night" />
         </EmbeddedCheckoutProvider>
+      )}
+      {loadData === "loading order" && (
+        <h1 className="text-black text-center">
+          {t("loadingorder")}...{" "}
+          <span>
+            <Spinner />
+          </span>
+        </h1>
+      )}
+      {loadData === "uploading file" && (
+        <h1 className="text-black text-center">
+          {t("uploadingfile")}
+          <span>
+            <Spinner />
+          </span>
+          <span className="text-black text-center"> {percentage}%</span>
+        </h1>
       )}
     </div>
   );

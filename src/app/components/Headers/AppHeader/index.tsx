@@ -72,7 +72,11 @@ export const AppHeader = ({
             <div className="hidden" />
           )}
 
-          <Link href={"/aboutus"} className="">
+          <Link
+            target="_blank"
+            href={"https://skyderdigital.com/aboutus"}
+            className=""
+          >
             <button className="sm:w-40 px-12 h-14 text-1xl rounded-1xl border-2 border-white  transition-colors rounded duration-350 ease-in-out  hover:bg-white hover:text-black">
               {t("aboutus")}
             </button>
@@ -138,7 +142,7 @@ export const AppHeader = ({
         ) : (
           <div className="hidden" />
         )}
-        <Link href={"/aboutus"}>
+        <Link target="_blank" href={"https://skyderdigital.com/aboutus"}>
           <button
             className={`sm:w-40 h-14 text-1xl ${
               main ? "border-white border-2 bg-black mr-8 rounded-xl" : ""

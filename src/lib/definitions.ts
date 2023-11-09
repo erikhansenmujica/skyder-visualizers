@@ -14,6 +14,7 @@ export type Customer = {
   artist: string;
   email: string;
   image_url?: string;
+  date?: Date;
 };
 
 export type Product = {
@@ -42,7 +43,7 @@ export type Order = {
   song_name: string;
   artist: string;
   price: number;
-  date: string;
+  date?: Date;
   invoice_id: string | null;
   customer_id: string;
   song_description: string;
@@ -77,6 +78,7 @@ export type CustomersTable = {
   total_invoices: number;
   total_pending: number;
   total_paid: number;
+  date?: Date;
 };
 
 export type CustomerField = {

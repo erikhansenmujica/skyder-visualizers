@@ -17,7 +17,7 @@ const Customer = ({ name, song, link, time, lng }: CustomersProps) => {
   const { t } = useTranslation(lng, "titlesandsubtitles");
   return (
     <li className="py-3 sm:py-4 ">
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center md:space-x-4">
         <div className="flex-shrink-0">
           {/* <img className="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-2.jpg" alt="Michael image"> */}
         </div>

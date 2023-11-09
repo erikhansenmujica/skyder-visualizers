@@ -28,7 +28,7 @@ const Home = ({ params: { lng } }: HomeProps) => {
   const [banner] = useState<string>("/content/bannermobile.mp4");
   const { t } = useTranslation(lng, "titlesandsubtitles");
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const adBlockDetected = useDetectAdBlock();
   useEffect(() => {
     if (adBlockDetected) {
@@ -43,9 +43,7 @@ const Home = ({ params: { lng } }: HomeProps) => {
       setLoading(false);
     })();
   }, []);
-  const imageStyles =
-    "object-contain w-full h-full rounded-xl shadow cursor-pointer hover:scale-[110%] hover:border-2 hover:border-white transition-all duration-500 ease-in-out";
-  const imageBoxes = "h-[25%] md:h-[32%] w-[25%] md:w-32% p-3";
+
   return adBlockDetected ? (
     <div
       className={`${calibri.className} flex flex-col items-center justify-around`}
@@ -78,6 +76,7 @@ const Home = ({ params: { lng } }: HomeProps) => {
           </video>
         )}
       </div>
+      <div className="absolute z-0 bg-gradient-to-t from-transparent to-black top-0 w-full h-full md:h-[500px] z-0"></div>
       <div className="mt-[6%]"></div>
       <MessagesInBetween
         inverted
@@ -86,196 +85,7 @@ const Home = ({ params: { lng } }: HomeProps) => {
         size="3xl"
       ></MessagesInBetween>
       <div className="w-screen flex flex-col flex-wrap justify-center items-center ">
-        <InputAndPayment lng={lng} selectedStyle={selectedStyle} />
-        <div className="flex-1 z-10">
-          <div className="flex flex-col ">
-            <h1 className="text-center text-white text-2xl my-8">
-              {t("pickstyle")}
-            </h1>
-            <div className="flex flex-wrap wrap flex-1 justify-evenly ">
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 1 ? 1 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/cyberpunk.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 1 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 2 ? 2 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/photorealistic.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 2 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 3 ? 3 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/pixelart.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 3 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 4 ? 4 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/watercolor.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 4 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 5 ? 5 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/popart.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 5 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 6 ? 6 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/anime.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 6 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 7 ? 7 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/futuristic.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 7 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 8 ? 8 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/neon.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 8 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 9 ? 9 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/pencildraw.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 9 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 10 ? 10 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/surrealism.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 10 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 11 ? 11 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/comic.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 11 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-              <div
-                className={imageBoxes}
-                onClick={() => setSelectedStyle(selectedStyle !== 12 ? 12 : 0)}
-              >
-                <Image
-                  alt=""
-                  src="/content/graffity.jpeg"
-                  width={"1000"}
-                  height={0}
-                  className={
-                    imageStyles +
-                    (selectedStyle === 12 ? " border-2 border-white" : "")
-                  }
-                ></Image>
-              </div>
-            </div>
-          </div>
-        </div>
+        <InputAndPayment lng={lng} style={selectedStyle} />
       </div>
       <MessagesInBetween
         inverted
@@ -301,6 +111,7 @@ const Home = ({ params: { lng } }: HomeProps) => {
         text={t("jobsaremade")}
         highlightwords={["48"]}
         size="3xl"
+        video={"/content/flores.mp4"}
       ></MessagesInBetween>
       <h2 className="text-center text-white text-2xl my-8">
         {t("playlistyoutube")}

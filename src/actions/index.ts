@@ -80,7 +80,9 @@ export async function SendOrder({
     const songtype =
       order && order.song_url.split(".")[order.song_url.split(".").length - 1];
     console.log(
-      order &&
+      "Hay que updatear? ",
+      !(
+        order &&
         order.status === "pending" &&
         order.song_name === songName &&
         order.artist === artistName &&
@@ -89,6 +91,7 @@ export async function SendOrder({
         order.price === selectedOption &&
         ((songtype === "mp3" && contentType === "audio/mpeg") ||
           (songtype === "wav" && contentType === "audio/wav"))
+      )
     );
     if (
       order &&
@@ -146,7 +149,6 @@ export async function createOrder({
         song_url: location,
         song_name: songName,
         price: price,
-        date: new Date().toISOString(),
         invoice_id: null,
         status: "pending",
       },
