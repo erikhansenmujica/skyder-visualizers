@@ -9,7 +9,6 @@ acceptLanguage.languages(languages);
 export default NextAuth(authConfig).auth;
 
 export const config = {
-  // matcher: '/:lng*'
   matcher: [
     "/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|faviconlogo.png|content|globals.css|logo.png|locales|fonts|static).*)",
   ],

@@ -8,7 +8,6 @@ const calibri = localFont({ src: "../../../fonts/calibri-regular.ttf" });
 
 export default function LoginForm() {
   const [code, action] = useFormState(authenticate, undefined);
-
   return (
     <form
       action={(e) => {
