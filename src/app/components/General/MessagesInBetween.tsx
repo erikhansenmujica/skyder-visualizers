@@ -28,7 +28,7 @@ export const MessagesInBetween = ({
           : "" +
             (gradient
               ? "bg-gradient-to-r from-blue-500 to-teal-400 w-full py-20 mb-400 "
-              : "bg-transparent w-full py-20 mb-400 bg-gray-800 border-gray-700 text-white")
+              : "bg-transparent w-full md:w-[95%] py-20 mb-400 bg-gray-800 border-gray-700 text-white")
       }
     >
       {video && (

@@ -22,10 +22,10 @@ export const AppHeader = ({
   };
   const { t } = useTranslation(lng, "headers");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobile, setMobile] = useState(false);
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+  const [mobile, setMobile] = useState(false);
   useEffect(() => {
     // Check screen width and set initial state
     const screenWidth = window.innerWidth;

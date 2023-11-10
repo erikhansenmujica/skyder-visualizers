@@ -104,7 +104,7 @@ export const StripeForm = ({
     }
   }, [selectedOption]);
   return (
-    <div id="checkout" className="w-full md:w-[70%] mt-8">
+    <div id="checkout" className="w-full md:w-[70%] mt-8 z-50">
       {clientSecret && stripePromise && loadData === "done" && (
         <EmbeddedCheckoutProvider
           stripe={stripePromise}

@@ -4,8 +4,8 @@ const users = [
   {
     id: "410544b2-4001-4271-9855-fec4b6a6442b",
     name: "User",
-    email: "erik@erik.com",
-    password: "123456",
+    email: "skyderdigital@gmail.com",
+    password: "niidea1234",
   },
 ];
 const jobs = [

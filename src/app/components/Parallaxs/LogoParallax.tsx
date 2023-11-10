@@ -8,8 +8,8 @@ export const LogoParallax = ({ isVisible, main }: LogoParallaxProps) => {
   return (
     <div
       className={`${
-        main ? "w-screen absolute" : "h-screen w-screen fixed"
-      } flex flex-col justify-center items-center  align-items-center  top-0`}
+        main ? "w-screen absolute top-10" : "h-screen w-screen fixed top-0"
+      } flex flex-col justify-center items-center  align-items-center  `}
     >
       <Image
         priority

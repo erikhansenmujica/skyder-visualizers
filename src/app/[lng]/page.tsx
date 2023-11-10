@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LogoParallax } from "../components/Parallaxs/LogoParallax";
 import { useTranslation } from "../i18n/client";
 import { Footer } from "../components/Footers/ClientFooter";
@@ -25,11 +25,13 @@ interface HomeProps {
 
 const Home = ({ params: { lng } }: HomeProps) => {
   const [selectedStyle, setSelectedStyle] = useState<number>();
-  const [banner] = useState<string>("/content/bannermobile.mp4");
+  const [banner] = useState<string>("/content/banner3.mp4");
   const { t } = useTranslation(lng, "titlesandsubtitles");
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const adBlockDetected = useDetectAdBlock();
+  const [mobile, setMobile] = useState(false);
+
   useEffect(() => {
     if (adBlockDetected) {
       alert(
@@ -42,6 +44,9 @@ const Home = ({ params: { lng } }: HomeProps) => {
       if (jobs) setJobs(jobs);
       setLoading(false);
     })();
+    // Check screen width and set initial state
+    const screenWidth = window.innerWidth;
+    setMobile(screenWidth <= 640); // Adjust the breakpoint as needed
   }, []);
 
   return adBlockDetected ? (
@@ -53,7 +58,7 @@ const Home = ({ params: { lng } }: HomeProps) => {
       <div className="absolute top-0 z-[-1]">
         {banner && (
           <video autoPlay playsInline className="w-screen" muted loop>
-            <source src={banner} type="video/mp4" />
+            <source src={"/content/banner.mp4"} type="video/mp4" />
           </video>
         )}
       </div>
@@ -70,13 +75,23 @@ const Home = ({ params: { lng } }: HomeProps) => {
       <LogoParallax isVisible={false} main />
       <AppHeader lng={lng} main />
       <div className="absolute top-0 z-[-1]">
-        {banner && (
+        {banner && !mobile && (
+          <video autoPlay playsInline className="w-screen" muted loop>
+            <source src={"/content/banner.mp4"} type="video/mp4" />
+          </video>
+        )}
+        {banner && mobile && (
           <video autoPlay playsInline className="w-screen" muted loop>
             <source src={banner} type="video/mp4" />
           </video>
         )}
+        {banner && mobile && (
+          <video autoPlay playsInline className="w-screen" muted loop>
+            <source src={"/content/banner2.mp4"} type="video/mp4" />
+          </video>
+        )}
+        <div className="absolute z-0 bg-gradient-to-t from-black via-transparent to-black/50 top-0 w-full h-full  z-0"></div>
       </div>
-      <div className="absolute z-0 bg-gradient-to-t from-transparent to-black top-0 w-full h-full md:h-[500px] z-0"></div>
       <div className="mt-[6%]"></div>
       <MessagesInBetween
         inverted
@@ -84,7 +99,7 @@ const Home = ({ params: { lng } }: HomeProps) => {
         highlightwords={[t("AI"), "48", "Skyder"]}
         size="3xl"
       ></MessagesInBetween>
-      <div className="w-screen flex flex-col flex-wrap justify-center items-center ">
+      <div className="w-screen flex flex-col flex-wrap justify-center items-center z-50 ">
         <InputAndPayment lng={lng} style={selectedStyle} />
       </div>
       <MessagesInBetween
@@ -93,7 +108,7 @@ const Home = ({ params: { lng } }: HomeProps) => {
         highlightwords={["50", t("jobs")]}
         size="3xl"
       ></MessagesInBetween>
-      <div className="w-full flex-wrap flex flex-col md:flex-row space-y-4 justify-evenly">
+      <div className="w-full flex-wrap flex flex-col md:flex-row space-y-4 mb-[5%] justify-evenly">
         {!loading ? (
           <LatestCustomers lng={lng} jobs={jobs} />
         ) : (
@@ -105,13 +120,12 @@ const Home = ({ params: { lng } }: HomeProps) => {
           <Spinner></Spinner>
         )}
       </div>
-
       <MessagesInBetween
         inverted
         text={t("jobsaremade")}
         highlightwords={["48"]}
         size="3xl"
-        video={"/content/flores.mp4"}
+        // video={"/content/flores.mp4"}
       ></MessagesInBetween>
       <h2 className="text-center text-white text-2xl my-8">
         {t("playlistyoutube")}
@@ -120,11 +134,11 @@ const Home = ({ params: { lng } }: HomeProps) => {
         lng={lng}
         src="https://www.youtube.com/embed/videoseries?si=QYwMGy4mI6Nr1O21&amp;list=PLou2miqXrKvkpOB7pKPPFqJPDYt4GLiFX"
       />
-      <div className="mt-[5%]">
+      {/* <script src="https://apps.elfsight.com/p/platform.js" defer></script>
+      <div className="elfsight-app-839c650c-48f3-4599-9175-328b6d45e507 "></div> */}{" "}
+      <div className="mt-[15%] ">
         <Footer lng={lng} />
       </div>
-      {/* <script src="https://apps.elfsight.com/p/platform.js" defer></script>
-      <div className="elfsight-app-839c650c-48f3-4599-9175-328b6d45e507 "></div> */}
     </div>
   );
 };

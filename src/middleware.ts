@@ -6,8 +6,6 @@ import NextAuth from "next-auth";
 
 acceptLanguage.languages(languages);
 
-export default NextAuth(authConfig).auth;
-
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|faviconlogo.png|content|globals.css|logo.png|locales|fonts|static).*)",
@@ -20,8 +18,15 @@ export function middleware(req: any) {
     req.nextUrl.pathname === "/login" ||
     req.nextUrl.pathname === "/api" ||
     req.nextUrl.pathname === "/cardbg.jpeg" ||
+    req.nextUrl.pathname.includes("dashboard") ||
     req.nextUrl.pathname === "/robots.txt"
   ) {
+    if (
+      req.nextUrl.pathname.includes("dashboard") ||
+      req.nextUrl.pathname === "/login"
+    ) {
+      return NextAuth(authConfig).auth(req);
+    }
     return NextResponse.next();
   }
   let lng;

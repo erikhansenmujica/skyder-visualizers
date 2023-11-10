@@ -1,5 +1,5 @@
 "use server";
-import { VercelClient, sql } from "@vercel/postgres";
+import { VercelClient } from "@vercel/postgres";
 import { Invoice } from "@/lib/definitions";
 
 export const CreateNewInvoice = async (
