@@ -1,27 +1,32 @@
 "use client";
-import { GetAllCustomers } from "@/actions/customers";
+import { GetAllCustomers, GetCustomerById } from "@/actions/customers";
 import localFont from "next/font/local";
 import { Customer, Invoice, Order } from "@/lib/definitions";
 import { useEffect, useState } from "react";
-import { GetAllOrders } from "@/actions/orders";
-import { GetAllInvoices } from "@/actions/invoices";
+import { GetAllOrders, GetUserOrders } from "@/actions/orders";
+import { GetAllInvoices, GetUserInvoices } from "@/actions/invoices";
 import Link from "next/link";
-const calibri = localFont({ src: "../../fonts/calibri-regular.ttf" });
-const druk = localFont({ src: "../../fonts/druk.wide.ttf" });
-export default function ResultPage({}: {
-  searchParams: { session_id: string; email: string; artist: string };
+const calibri = localFont({ src: "../../../fonts/calibri-regular.ttf" });
+const druk = localFont({ src: "../../../fonts/druk.wide.ttf" });
+export default function ResultPage({
+  searchParams: { id },
+}: {
+  searchParams: { id: string };
 }): JSX.Element {
-  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [customers, setCustomers] = useState<Customer>();
+
   const [orders, setOrders] = useState<Order[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   useEffect(() => {
     (async () => {
-      const res = await GetAllCustomers();
-      if (res) setCustomers(res);
-      const resOrders = await GetAllOrders();
-      if (resOrders) setOrders(resOrders);
-      const resInvoices = await GetAllInvoices();
-      if (resInvoices) setInvoices(resInvoices);
+      const res = await GetCustomerById(id);
+      if (res) {
+        setCustomers(res);
+        const resOrders = await GetUserOrders(res.email);
+        if (resOrders) setOrders(resOrders);
+        const resInvoices = await GetUserInvoices(id);
+        if (resInvoices) setInvoices(resInvoices);
+      }
     })();
   }, []);
   const sections =
@@ -36,26 +41,7 @@ export default function ResultPage({}: {
       <h1 className="text-3xl">Admin Dashboard</h1>
       <div className="w-screen flex flex-wrap w-screen justify-evenly">
         <div className={sections}>
-          <h2 className={druk.className}>Customers</h2>
-          <div className={contentBox}>
-            {customers &&
-              customers.length &&
-              customers.map((customer, i) => (
-                <Link
-                  href={`/dashboard/customer/?id=${customer.id}`}
-                  className={box}
-                  key={i}
-                >
-                  <p className={textinboxes}>
-                    <span className="underline">Email</span>: {customer.email}
-                  </p>
-                  <p className={textinboxes}>
-                    <span className="underline">Artist Name</span>:{" "}
-                    {customer.artist}
-                  </p>
-                </Link>
-              ))}
-          </div>
+          <h2 className={druk.className}>Customer: {customers?.artist}</h2>
         </div>
         <div className={sections}>
           <h2 className={druk.className}>Orders</h2>

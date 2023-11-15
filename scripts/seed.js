@@ -187,16 +187,16 @@ async function seedCustomers(client) {
 async function main() {
   const client = await db.connect();
   client.sql`DROP table IF EXISTS users CASCADE`;
-  // client.sql`DROP table IF EXISTS customers CASCADE`;
-  // client.sql`DROP table IF EXISTS invoices CASCADE`;
-  // client.sql`DROP table IF EXISTS orders CASCADE`;
-  // client.sql`DROP table IF EXISTS invoice CASCADE`;
-  // client.sql`DROP table IF EXISTS jobs CASCADE`;
+  client.sql`DROP table IF EXISTS customers CASCADE`;
+  client.sql`DROP table IF EXISTS invoices CASCADE`;
+  client.sql`DROP table IF EXISTS orders CASCADE`;
+  client.sql`DROP table IF EXISTS invoice CASCADE`;
+  client.sql`DROP table IF EXISTS jobs CASCADE`;
   await seedUsers(client);
-  // await seedCustomers(client);
-  // await seedOrders(client);
-  // await seedInvoices(client);
-  // await seedJobs(client);
+  await seedCustomers(client);
+  await seedOrders(client);
+  await seedInvoices(client);
+  await seedJobs(client);
   await client.end();
 }
 

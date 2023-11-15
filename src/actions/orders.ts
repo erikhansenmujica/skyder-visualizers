@@ -1,8 +1,9 @@
 "use server";
-import { VercelClient } from "@vercel/postgres";
+import { db } from "@vercel/postgres";
 import { Order } from "@/lib/definitions";
 
-export const CreateNewOrder = async (order: Order, client: VercelClient) => {
+export const CreateNewOrder = async (order: Order) => {
+  const client = await db.connect();
   try {
     const newOrder =
       await client.sql<Order>`INSERT INTO orders (artist, customer_id, email, song_description, song_url, song_name, price, invoice_id, status, product_id) VALUES (${
@@ -19,7 +20,8 @@ export const CreateNewOrder = async (order: Order, client: VercelClient) => {
     console.error(error);
   }
 };
-export const getOrder = async (email: string, client: VercelClient) => {
+export const getOrder = async (email: string) => {
+  const client = await db.connect();
   try {
     const newOrder =
       await client.sql<Order>`SELECT * FROM orders WHERE email = ${email} ORDER BY date DESC LIMIT 1`;
@@ -32,9 +34,9 @@ export const getOrder = async (email: string, client: VercelClient) => {
 export const UpdateOrderInvoiceID = async (
   invoiceId: string,
   order_id: string,
-  stripe_pi_id: string,
-  client: VercelClient
+  stripe_pi_id: string
 ) => {
+  const client = await db.connect();
   try {
     const newOrder = await client.sql<Order>`
     UPDATE orders
@@ -42,6 +44,27 @@ export const UpdateOrderInvoiceID = async (
     WHERE id = ${order_id};
 `;
     return newOrder.rows[0];
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const GetAllOrders = async () => {
+  const client = await db.connect();
+  try {
+    const newOrder = await client.sql<Order>`SELECT * FROM orders`;
+    return newOrder.rows;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const GetUserOrders = async (email: string) => {
+  const client = await db.connect();
+  try {
+    const newOrder =
+      await client.sql<Order>`SELECT * FROM orders WHERE email = ${email}`;
+    return newOrder.rows;
   } catch (error) {
     console.error(error);
   }

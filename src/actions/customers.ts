@@ -1,11 +1,11 @@
 "use server";
-import { VercelClient } from "@vercel/postgres";
+import { db } from "@vercel/postgres";
 import { Customer } from "@/lib/definitions";
 
 export const CreateOrReturnExistingCustomer = async (
-  customer: Customer,
-  client: VercelClient
+  customer: Customer
 ): Promise<Customer | undefined> => {
+  const client = await db.connect();
   try {
     const existingCustomer =
       await client.sql<Customer>`SELECT * FROM customers WHERE email = ${customer.email}`;
@@ -23,11 +23,21 @@ export const CreateOrReturnExistingCustomer = async (
   }
 };
 
-export const GetCustomerById = async (id: string, client: VercelClient) => {
+export const GetCustomerById = async (id: string) => {
+  const client = await db.connect();
   try {
     const customer =
       await client.sql<Customer>`SELECT * FROM customers WHERE id = ${id}`;
     return customer.rows[0];
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const GetAllCustomers = async () => {
+  const client = await db.connect();
+  try {
+    const customer = await client.sql<Customer>`SELECT * FROM customers`;
+    return customer.rows;
   } catch (error) {
     console.error(error);
   }

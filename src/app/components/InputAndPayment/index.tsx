@@ -103,13 +103,13 @@ export const InputAndPayment = ({ lng, style }: IInputAndPayment) => {
       )}
       {!selectedOption ? (
         <div className="flex flex-col md:flex-row items-center justify-between md:justify-evenly">
-          <div className="relative flex flex-col items-center mt-8  w-[100%] md:w-[45%] ">
+          <div className="relative flex flex-col items-center mt-8 w-[100%] md:w-[45%] rounded-3xl shadow-md shadow-white">
             <video
               autoPlay
               playsInline
               muted
               loop
-              className="w-full border-2 border-white"
+              className="w-full border-2 border-white rounded-3xl"
             >
               <source src={"/content/cover.mp4"} type="video/mp4" />
             </video>
@@ -120,7 +120,7 @@ export const InputAndPayment = ({ lng, style }: IInputAndPayment) => {
                   setStripeModal(true);
                 }
               }}
-              className="absolute bg-gradient-to-r hover:to-[rgba(255,255,255,0.5)] from-transparent to-[rgba(0,0,0,0.5)] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] flex justify-center items-center top-0 left-0  w-full h-full cursor-pointer"
+              className="absolute bg-gradient-to-r hover:to-[rgba(255,255,255,0.5)] from-transparent to-[rgba(0,0,0,0.5)] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] flex justify-center items-center top-0 left-0  w-full h-full cursor-pointer rounded-3xl"
             >
               <h2
                 className={"text-white text-xl text-center " + druk.className}
@@ -140,13 +140,13 @@ export const InputAndPayment = ({ lng, style }: IInputAndPayment) => {
               </h2>
             </div>
           </div>
-          <div className="relative flex flex-col items-center mt-8 w-[100%] md:w-[45%] ">
+          <div className="relative flex flex-col items-center mt-8 w-[100%] md:w-[45%] rounded-3xl shadow-md shadow-white">
             <video
               autoPlay
               playsInline
               muted
               loop
-              className="w-full border-2 border-white"
+              className="w-full border-2 border-white rounded-3xl"
             >
               <source src={"/content/visualizer.mp4"} type="video/mp4" />
             </video>
@@ -157,7 +157,7 @@ export const InputAndPayment = ({ lng, style }: IInputAndPayment) => {
                   setStripeModal(true);
                 }
               }}
-              className="absolute bg-gradient-to-l  hover:to-[rgba(255,255,255,0.5)] from-transparent to-[rgba(0,0,0,0.5)] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] flex justify-center items-center top-0 left-0 w-full h-full cursor-pointer"
+              className="absolute bg-gradient-to-l hover:to-[rgba(255,255,255,0.5)] from-transparent to-[rgba(0,0,0,0.5)] drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)] flex justify-center items-center top-0 left-0 w-full h-full cursor-pointer rounded-3xl"
             >
               <h2
                 className={"text-white text-center text-xl " + druk.className}

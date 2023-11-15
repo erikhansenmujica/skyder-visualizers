@@ -1,10 +1,9 @@
 "use server";
 import { Job } from "@/lib/definitions";
-import { createClient } from "@vercel/postgres";
+import { db } from "@vercel/postgres";
 
 export const GetJobs = async () => {
-  const client = createClient();
-  await client.connect();
+  const client = await db.connect();
   try {
     const jobs = await client.sql<Job>`SELECT * FROM jobs`;
     return jobs.rows;

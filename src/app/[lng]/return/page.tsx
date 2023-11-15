@@ -26,6 +26,7 @@ export default async function ResultPage({
 
   const paymentIntent = checkoutSession.payment_intent as Stripe.PaymentIntent;
   const id = paymentIntent.id;
+
   if (id && searchParams.email && searchParams.artist) {
     await createInvoiceAndAddToOrder(
       decodeURI(searchParams.email),

@@ -90,7 +90,7 @@ const Home = ({ params: { lng } }: HomeProps) => {
             <source src={"/content/banner2.mp4"} type="video/mp4" />
           </video>
         )}
-        <div className="absolute z-0 bg-gradient-to-t from-black via-transparent to-black/50 top-0 w-full h-full  z-0"></div>
+        <div className="absolute z-0 bg-gradient-to-t from-black via-transparent to-black/100 top-0 w-full h-full  z-0"></div>
       </div>
       <div className="mt-[6%]"></div>
       <MessagesInBetween

@@ -1,3 +1,4 @@
+import "../../../public/globals.css";
 export const metadata = {
   title: "Skyder Admin Dashboard",
   description: "Dasboard",

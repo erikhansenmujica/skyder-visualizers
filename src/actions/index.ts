@@ -3,7 +3,6 @@ import { signIn } from "../auth";
 import { CreateOrReturnExistingCustomer } from "./customers";
 import { CreateNewOrder, UpdateOrderInvoiceID, getOrder } from "./orders";
 import { CreateNewInvoice } from "./invoices";
-import { createClient } from "@vercel/postgres";
 import { Customer } from "@/lib/definitions";
 
 export async function authenticate(
@@ -24,34 +23,25 @@ export const createInvoiceAndAddToOrder = async (
   artistName: string,
   stripe_pi_id: string
 ) => {
-  const client = createClient();
-  await client.connect();
-  const custom = await CreateOrReturnExistingCustomer(
-    {
-      email,
-      artist: artistName,
-    },
-    client
-  );
+  const custom = await CreateOrReturnExistingCustomer({
+    email,
+    artist: artistName,
+  });
   if (custom) {
-    const order = await getOrder(custom.email, client);
+    const order = await getOrder(custom.email);
     if (order) {
-      const invoice = await CreateNewInvoice(
-        {
-          id: "",
-          customer_id: custom.id ? custom.id : "",
-          date: new Date().toISOString(),
-          price: order.price,
-          product_id:
-            order?.price === 25 ? "Skyder Cover" : "Skyder Visualizer",
-          stripe_pi_id: stripe_pi_id,
-          status: "paid",
-          order_id: order.id,
-        },
-        client
-      );
+      const invoice = await CreateNewInvoice({
+        id: "",
+        customer_id: custom.id ? custom.id : "",
+        date: new Date().toISOString(),
+        price: order.price,
+        product_id: order?.price === 25 ? "Skyder Cover" : "Skyder Visualizer",
+        stripe_pi_id: stripe_pi_id,
+        status: "paid",
+        order_id: order.id,
+      });
       if (typeof invoice === "object") {
-        await UpdateOrderInvoiceID(invoice.id, order.id, stripe_pi_id, client);
+        await UpdateOrderInvoiceID(invoice.id, order.id, stripe_pi_id);
       }
     }
   }
@@ -73,10 +63,8 @@ export async function SendOrder({
   songDescription,
   contentType,
 }: SendOrderProps) {
-  const client = createClient();
-  await client.connect();
   if (songName && email && artistName && selectedOption) {
-    const order = await getOrder(email, client);
+    const order = await getOrder(email);
     const songtype =
       order && order.song_url.split(".")[order.song_url.split(".").length - 1];
     console.log(
@@ -135,24 +123,19 @@ export async function createOrder({
   price: number;
   song_description: string;
 }) {
-  const client = createClient();
-  await client.connect();
-  const custom = await CreateOrReturnExistingCustomer(customer, client);
+  const custom = await CreateOrReturnExistingCustomer(customer);
   if (custom) {
-    await CreateNewOrder(
-      {
-        id: "",
-        artist: customer.artist,
-        customer_id: custom.id ? custom.id : "",
-        email: customer.email,
-        song_description: song_description,
-        song_url: location,
-        song_name: songName,
-        price: price,
-        invoice_id: null,
-        status: "pending",
-      },
-      client
-    );
+    await CreateNewOrder({
+      id: "",
+      artist: customer.artist,
+      customer_id: custom.id ? custom.id : "",
+      email: customer.email,
+      song_description: song_description,
+      song_url: location,
+      song_name: songName,
+      price: price,
+      invoice_id: null,
+      status: "pending",
+    });
   }
 }
