@@ -18,7 +18,6 @@ export const SubtitlesComesIn = ({
     }
     p-6
     duration-1000 z-6
-    
     flex flex-col h-screen justify-center items-center color-white fixed bottom-0 left-0 right-0 z-0 `}
   >
     <p className="text-white text-1xl cursor-pointer transition ease-in-out hover:-translate-y-1 hover:scale-110  duration-300">
