@@ -51,7 +51,6 @@ export function middleware(req: any) {
       new URL(`/${lng}${req.nextUrl.pathname}${params}`, req.url)
     );
   }
-
   if (req.headers.has("referer")) {
     const refererUrl = new URL(req.headers.get("referer"));
     const lngInReferer = languages.find((l) =>
