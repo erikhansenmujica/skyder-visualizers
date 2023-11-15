@@ -6,20 +6,15 @@ export const authConfig = {
     signIn: "/login",
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
+    authorized({ auth, request: { nextUrl, url } }) {
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.endsWith("dashboard");
       const isOnLogin = nextUrl.pathname.endsWith("login");
       if (isOnDashboard) {
         if (isLoggedIn) return true;
-        return Response.redirect(
-          new URL("/login", "https://app.skyderdigital.com")
-        );
+        return Response.redirect(new URL("/login", url));
       } else if (isOnLogin) {
-        if (isLoggedIn)
-          return Response.redirect(
-            new URL("/dashboard", "https://app.skyderdigital.com")
-          );
+        if (isLoggedIn) return Response.redirect(new URL("/dashboard", url));
       }
       return true;
     },
