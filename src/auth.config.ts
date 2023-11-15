@@ -12,9 +12,10 @@ export const authConfig = {
       const isOnLogin = nextUrl.pathname.endsWith("login");
       if (isOnDashboard) {
         if (isLoggedIn) return true;
-        return Response.redirect(new URL("/login", url));
+        return Response.redirect("https://app.skyderdigital.com/login");
       } else if (isOnLogin) {
-        if (isLoggedIn) return Response.redirect(new URL("/dashboard", url));
+        if (isLoggedIn)
+          return Response.redirect("https://app.skyderdigital.com/dashboard");
       }
       return true;
     },
