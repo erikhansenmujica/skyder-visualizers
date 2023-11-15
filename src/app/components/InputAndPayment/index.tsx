@@ -43,6 +43,7 @@ export const InputAndPayment = ({ lng, style }: IInputAndPayment) => {
   const [email, setEmail] = useState("");
   const [selectedOption, setSelectedOption] = useState<number>();
   const { t } = useTranslation(lng, "form");
+  const t2 = useTranslation(lng, "titlesandsubtitles");
   const [stripeModal, setStripeModal] = useState(false);
   const handleTabChange = (tab: number) => {
     setActiveTab(tab);
@@ -99,7 +100,11 @@ export const InputAndPayment = ({ lng, style }: IInputAndPayment) => {
       }
     >
       {!selectedOption && (
-        <h1 className="text-center text-white text-2xl">{t("chooseoption")}</h1>
+        <h1 className="text-center text-white text-2xl">
+          {t("chooseoption")}
+          <br />
+          {t2.t("bothoptions")}
+        </h1>
       )}
       {!selectedOption ? (
         <div className="flex flex-col md:flex-row items-center justify-between md:justify-evenly">
