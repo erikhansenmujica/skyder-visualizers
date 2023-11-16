@@ -22,7 +22,6 @@ export const CreateOrReturnExistingCustomer = async (
     console.error(error);
   }
 };
-
 export const GetCustomerById = async (id: string) => {
   const client = await db.connect();
   try {
